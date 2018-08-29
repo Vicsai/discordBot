@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "discord.io": "^2.5.3",
     "npx": "^10.2.0",
     "prettier": "^1.14.2"
   },
