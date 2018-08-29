@@ -6,6 +6,7 @@ const games = [];
 const commands = {};
 let voiceChannel;
 let currentChannel = '';
+let tts = false;
 
 const bot = new Discord.Client();
 
@@ -27,16 +28,20 @@ bot.on('message', message => {
   const command = parsed[0];
   const arg = parsed[1];
   ({ voiceChannel } = message.member);
-  currentChannel.send(commands[command](arg));
+  if (Object.keys(commands).indexOf(command) !== -1)
+    currentChannel.send(commands[command](arg), { tts });
+  tts = false;
 });
-
-// commands
+// COMMANDS
+// adding/deleting and picking a game
 commands.add = function add(game) {
+  if (game === undefined) return 'please provide a game to add';
   games.push(game);
   return `successfully added ${game}`;
 };
 commands.remove = function remove(game) {
-  const index = games.find(game);
+  if (game === undefined) return 'please provide a game to remove';
+  const index = games.indexOf(game);
   if (index !== -1) {
     games.splice(index, 1);
     return `successfully removed ${game}`;
@@ -51,16 +56,19 @@ commands.pick = function pick() {
   const rand = Math.floor(Math.random() * games.length);
   return games[rand];
 };
+// picking igl
 commands.igl = function igl() {
   if (voiceChannel === undefined) return 'please join a voice channel';
   const usersInChannel = voiceChannel.members;
   const users = [];
-  for (let [snowflake, guildMember] of usersInChannel) {
+  for (const [snowflake, guildMember] of usersInChannel) {
     users.push(guildMember.user.username);
   }
   const rand = Math.floor(Math.random() * users.length);
-  return users[rand];
+  tts = true;
+  return `${users[rand]} is team leader`;
 };
+// help
 commands.help = function help() {
   return Object.keys(commands);
 };
