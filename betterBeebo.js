@@ -2,14 +2,17 @@ const Discord = require('discord.js');
 const auth = require('./auth.json');
 
 const games = [];
+const commands = {};
+let currentChannel = '';
 
 const bot = new Discord.Client();
 
 function parseMessage(message) {
-  const formatted=message.substring(1);
-  const parsed = message.content.split(' ');
+  const formatted = message.content.substring(1);
+  const parsed = formatted.split(' ');
   return parsed;
 }
+
 bot.login(auth.token);
 
 bot.on('ready', () => {
@@ -17,16 +20,22 @@ bot.on('ready', () => {
 });
 bot.on('message', message => {
   if (!message.content.startsWith('!') || message.author.bot) return;
+  currentChannel = message.channel;
   const parsed = parseMessage(message);
   const command = parsed[0];
-  const arg= parsed[1];
-  if (command === 'test') message.channel.send('I AM BEEBO');
-  if (command === 'add') {
-    games.push(arg);
-    message.channel.send('successfully added');
-  }
-  if (command==='remove'){
-    if (games.find(arg)
-  }
-  if (command === 'show') message.channel.send(games.toString());
+  const arg = parsed[1];
+  commands[command](arg);
 });
+commands.add = function add(game) {
+  games.push(game);
+  currentChannel.send('successfully added');
+};
+commands.remove = function remove(game) {
+  let i = games.find(game);
+  if (i!==-1){
+    games.
+  }
+};
+commands.show = function show() {
+  currentChannel.send(games.toString);
+};
