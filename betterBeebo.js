@@ -48,8 +48,7 @@ commands.show = function show() {
   return 'no games in array';
 };
 commands.pick = function pick() {
-  const num = games.length;
-  const rand = Math.floor(Math.random() * num);
+  const rand = Math.floor(Math.random() * games.length);
   return games[rand];
 };
 commands.igl = function igl() {
@@ -61,4 +60,7 @@ commands.igl = function igl() {
   }
   const rand = Math.floor(Math.random() * users.length);
   return users[rand];
+};
+commands.help = function help() {
+  return Object.keys(commands);
 };
