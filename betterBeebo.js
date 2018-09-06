@@ -22,9 +22,15 @@ bot.login(auth.token);
 
 bot.on('ready', () => {
   console.log('beebo lives!');
-  server = bot.guilds.get(auth.serverID);
-  textChannel = server.channels.get(auth.serverID);
+  server = bot.guilds.get(auth.serverID); // 484192628586577934
   channels = Array.from(server.channels.keys());
+  for (let i = 0; i < channels.length; i += 1) {
+    if (server.channels.get(channels[i]).type === 'text') {
+      textChannel = server.channels.get(channels[i]);
+    }
+  }
+  console.log(textChannel);
+  // textChannel = server.channels.get(auth.serverID);
   for (let i = 0; i < Object.keys(commands).length; i += 1) ttsArray.push(false);
 });
 bot.on('message', message => {
@@ -81,9 +87,12 @@ commands.igl = function igl() {
       return 'not enough people in channel';
     if (currentChannel.type === 'voice' && members.length > 1) {
       const users = [];
-      for (const [, guildMember] of currentChannel.members) {
-        users.push(guildMember.user.username);
+      for (let j = 0; j < members.length; j += 1) {
+        users.push(currentChannel.members.get(members[j]));
       }
+      // for (const [, guildMember] of currentChannel.members) {
+      //   users.push(guildMember.user.username);
+      // }
       const rand = Math.floor(Math.random() * users.length);
       return `${users[rand]} is team leader`;
     }
