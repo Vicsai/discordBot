@@ -20,12 +20,17 @@ function parseMessage(message) {
   const parsed = formatted.split(' ');
   return parsed;
 }
+function formatDate(date) {
+  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  console.log(formattedDate);
+  return formattedDate;
+}
 
 bot.login(auth.token);
 
 bot.on('ready', () => {
   console.log('beebo lives!');
-  server = bot.guilds.get(auth.serverID); // 484192628586577934
+  server = bot.guilds.get('484192628586577934'); // 484192628586577934
   channels = Array.from(server.channels.keys());
   for (let i = 0; i < channels.length; i += 1) {
     if (server.channels.get(channels[i]).type === 'text') {
@@ -102,9 +107,16 @@ commands.tvAdd = function tvAdd(tvSeries) {
   tvShows.push(tvSeries);
   return `${tvSeries} is added`;
 };
-commands.tvGuide = function tvGuide() {
-  tvmaze.search('Lost', (error, response) => {
-    JSON.parse(response);
+commands.tvGuide = function tvGuide(x) {
+  // x can pass in day of the week or all; if nothing then defaults to today
+  const date = new Date();
+  if (x === undefined) {
+    formatDate(date);
+  }
+  tvmaze.schedule('US', date, (error, response) => {
+    console.log(JSON.parse(response));
+
+    return '0';
   });
 };
 // toggle tts on commands
