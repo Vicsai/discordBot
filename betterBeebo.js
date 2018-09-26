@@ -9,7 +9,14 @@ let channels; // array of text and voice channels in server
 let textChannel; // text channel id
 
 const games = [];
-const tvShows = [];
+const tvShows = [
+  'The Flash',
+  'Arrow',
+  "DC's Legends of Tomorrow",
+  'Black Lightning',
+  'Gotham',
+  'Modern Family'
+];
 const commands = {}; // object that contains the commands
 const ttsArray = []; // array of booleans that dictates the use of text-to-speech
 
@@ -28,7 +35,6 @@ function parseMessage(message) {
 function formatDate(date) {
   const month = `0${date.getMonth() + 1}`;
   const formattedDate = `${date.getFullYear()}-${month.substring(0, 2)}-${date.getDate()}`;
-  console.log(formattedDate);
   return formattedDate;
 }
 // TODO add tts
@@ -93,7 +99,7 @@ commands.remove = function remove(game) {
     return 'success (remove game)';
   }
   sendMessage(`${game} was not in the array`);
-  return 'game not in array (remove game)';
+  return 'not in array (remove game)';
 };
 // lists values in array games
 commands.show = function show() {
@@ -102,7 +108,7 @@ commands.show = function show() {
     return 'success (show game)';
   }
   sendMessage('no games in array');
-  return 'no games in array (show game)';
+  return 'not in array (show game)';
 };
 commands.pick = function pick() {
   const rand = Math.floor(Math.random() * games.length);
@@ -132,15 +138,35 @@ commands.igl = function igl() {
   return 'no one in channel (igl)';
 };
 commands.tvAdd = function tvAdd(tvSeries) {
+  if (tvSeries === undefined) {
+    sendMessage('no tv show specified');
+    return 'undefined (tvAdd)';
+  }
   tvShows.push(tvSeries);
   sendMessage(`${tvSeries} is added`);
-  console.log(tvShows);
-  return 'success (add show)';
+  return 'success (tvAdd)';
 };
-commands.tvGuide = function tvGuide() {
+commands.tvRemove = function tvRemove(tvSeries) {
+  if (tvSeries === undefined) {
+    sendMessage('no tv show specified');
+    return 'undefined (tvRemove)';
+  }
+  const index = tvShows.indexOf(tvSeries);
+  if (index !== -1) {
+    tvShows.splice(index, 1);
+    sendMessage(`successfully removed ${tvSeries}`);
+    return 'success (tvRemove)';
+  }
+  sendMessage(`${tvSeries} not found in array`);
+  return 'not in array (tvRemove)';
+};
+commands.tvGuide = function tvGuide(x) {
   // x can pass in day of the week or all; if nothing then defaults to today
-  let date = new Date();
-  date = formatDate(date);
+  let date;
+  if (x === undefined) {
+    date = new Date();
+    date = formatDate(date);
+  }
   tvmaze.schedule('US', date, (error, response) => {
     const sched = JSON.parse(response);
     sched.forEach(episode => {
