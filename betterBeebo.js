@@ -16,13 +16,19 @@ const ttsArray = []; // array of booleans that dictates the use of text-to-speec
 const bot = new Discord.Client();
 
 function parseMessage(message) {
+  const parsed = [];
   const formatted = message.content.substring(1);
-  const parsed = formatted.split(' ');
+  const space = formatted.indexOf(' ');
+  if (space !== -1) {
+    parsed[0] = formatted.slice(0, space);
+    parsed[1] = formatted.slice(space + 1);
+  } else parsed[0] = formatted;
   return parsed;
 }
 function formatDate(date) {
   const month = `0${date.getMonth() + 1}`;
   const formattedDate = `${date.getFullYear()}-${month.substring(0, 2)}-${date.getDate()}`;
+  console.log(formattedDate);
   return formattedDate;
 }
 // TODO add tts
@@ -35,7 +41,7 @@ bot.login(auth.token);
 
 bot.on('ready', () => {
   console.log('beebo lives!');
-  server = bot.guilds.get(auth.serverID); // 484192628586577934
+  server = bot.guilds.get('484192628586577934'); // 484192628586577934
   channels = Array.from(server.channels.keys());
   for (let i = 0; i < channels.length; i += 1) {
     if (server.channels.get(channels[i]).type === 'text') {
@@ -128,14 +134,13 @@ commands.igl = function igl() {
 commands.tvAdd = function tvAdd(tvSeries) {
   tvShows.push(tvSeries);
   sendMessage(`${tvSeries} is added`);
+  console.log(tvShows);
   return 'success (add show)';
 };
-commands.tvGuide = function tvGuide(x) {
+commands.tvGuide = function tvGuide() {
   // x can pass in day of the week or all; if nothing then defaults to today
   let date = new Date();
-  if (x === undefined) {
-    date = formatDate(date);
-  }
+  date = formatDate(date);
   tvmaze.schedule('US', date, (error, response) => {
     const sched = JSON.parse(response);
     sched.forEach(episode => {
