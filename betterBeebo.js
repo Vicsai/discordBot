@@ -47,7 +47,7 @@ bot.login(auth.token);
 
 bot.on('ready', () => {
   console.log('beebo lives!');
-  server = bot.guilds.get('484192628586577934'); // 484192628586577934
+  server = bot.guilds.get(auth.testID);
   channels = Array.from(server.channels.keys());
   for (let i = 0; i < channels.length; i += 1) {
     if (server.channels.get(channels[i]).type === 'text') {
@@ -66,7 +66,6 @@ bot.on('message', message => {
   }
 });
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
-  // TODO change to not use tts
   const oldUserChannel = oldMember.voiceChannel;
   const newUserChannel = newMember.voiceChannel;
   // check if user joined a channel
