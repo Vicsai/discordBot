@@ -1,191 +1,94 @@
 // libraries
 const Discord = require('discord.js');
-const tvmaze = require('tvmaze-node');
+const fs = require('fs');
+
 const auth = require('./auth.json');
 
-// variables
-let server; // server id
-let channels; // array of text and voice channels in server
-let textChannel; // text channel id
+class BetterBeebo {
+  constructor() {
+    const bot = new Discord.Client();
 
-const games = [];
-const tvShows = [
-  'The Flash',
-  'Arrow',
-  "DC's Legends of Tomorrow",
-  'Black Lightning',
-  'Gotham',
-  'Modern Family'
-];
-const commands = {}; // object that contains the commands
-const ttsArray = []; // array of booleans that dictates the use of text-to-speech
+    this.server = bot.guilds.get(auth.testID);
 
-const bot = new Discord.Client();
+    this.textChannel = '';
+    this.init();
 
-function parseMessage(message) {
-  const parsed = [];
-  const formatted = message.content.substring(1);
-  const space = formatted.indexOf(' ');
-  if (space !== -1) {
-    parsed[0] = formatted.slice(0, space);
-    parsed[1] = formatted.slice(space + 1);
-  } else parsed[0] = formatted;
-  return parsed;
-}
-function formatDate(date) {
-  const month = `0${date.getMonth() + 1}`;
-  const formattedDate = `${date.getFullYear()}-${month.substring(0, 2)}-${date.getDate()}`;
-  return formattedDate;
-}
-// TODO add tts
-function sendMessage(message) {
-  textChannel.send(message);
-  return message;
-}
+    this.games = [];
+    this.tvShows = [
+      'The Flash',
+      'Arrow',
+      "DC's Legends of Tomorrow",
+      'Black Lightning',
+      'Gotham',
+      'Modern Family',
+      'Titans'
+    ];
+    this.commands = {}; // object that contains the commands
+    this.loadCommands();
+    this.ttsArray = []; // array of booleans that dictates the use of text-to-speech
 
-bot.login(auth.token);
+    bot.login(auth.token);
 
-bot.on('ready', () => {
-  console.log('beebo lives!');
-  server = bot.guilds.get(auth.testID);
-  channels = Array.from(server.channels.keys());
-  for (let i = 0; i < channels.length; i += 1) {
-    if (server.channels.get(channels[i]).type === 'text') {
-      textChannel = server.channels.get(channels[i]);
-      return;
-    }
-  }
-  for (let i = 0; i < Object.keys(commands).length; i += 1) ttsArray.push(false);
-});
-bot.on('message', message => {
-  if (!message.content.startsWith('!') || message.author.bot) return;
-  const [command, arg] = parseMessage(message);
-  const commandIndex = Object.keys(commands).indexOf(command);
-  if (commandIndex !== -1) {
-    commands[command](arg);
-  }
-});
-bot.on('voiceStateUpdate', (oldMember, newMember) => {
-  const oldUserChannel = oldMember.voiceChannel;
-  const newUserChannel = newMember.voiceChannel;
-  // check if user joined a channel
-  if (newUserChannel !== undefined && oldUserChannel === undefined) {
-    sendMessage(`${newMember.user.username} has joined your channel`);
-  }
-});
-// COMMANDS
-
-// add game into games array
-commands.add = function add(game) {
-  if (game === undefined) {
-    sendMessage('please provide a game to add');
-    return 'undefined (add game)';
-  }
-  games.push(game);
-  sendMessage(`successfully added ${game}`);
-  return 'success (add game)';
-};
-// remove game from games array if found
-commands.remove = function remove(game) {
-  if (game === undefined) {
-    sendMessage('please provide a game to remove');
-    return 'undefined (remove game)';
-  }
-  const index = games.indexOf(game);
-  if (index !== -1) {
-    games.splice(index, 1);
-    sendMessage(`successfully removed ${game}`);
-    return 'success (remove game)';
-  }
-  sendMessage(`${game} was not in the array`);
-  return 'not in array (remove game)';
-};
-// lists values in array games
-commands.show = function show() {
-  if (games.length !== 0) {
-    sendMessage(games.toString());
-    return 'success (show game)';
-  }
-  sendMessage('no games in array');
-  return 'not in array (show game)';
-};
-commands.pick = function pick() {
-  const rand = Math.floor(Math.random() * games.length);
-  sendMessage(games[rand]);
-  return 'success (pick game)';
-};
-// randomly selects a user from a voice channel
-commands.igl = function igl() {
-  for (let i = 0; i < channels.length; i += 1) {
-    const currentChannel = server.channels.get(channels[i]);
-    const members = Array.from(currentChannel.members.keys());
-    if (currentChannel.type === 'voice' && members.length === 1) {
-      sendMessage('not enough people in channel');
-      return 'not enough people (igl)';
-    }
-    if (currentChannel.type === 'voice' && members.length > 1) {
-      const users = [];
-      for (let j = 0; j < members.length; j += 1) {
-        users.push(currentChannel.members.get(members[j]));
-      }
-      const rand = Math.floor(Math.random() * users.length);
-      sendMessage(`${users[rand]} is team leader`);
-      return 'success (igl)';
-    }
-  }
-  sendMessage('no one in voice channel');
-  return 'no one in channel (igl)';
-};
-commands.tvAdd = function tvAdd(tvSeries) {
-  if (tvSeries === undefined) {
-    sendMessage('no tv show specified');
-    return 'undefined (tvAdd)';
-  }
-  tvShows.push(tvSeries);
-  sendMessage(`${tvSeries} is added`);
-  return 'success (tvAdd)';
-};
-commands.tvRemove = function tvRemove(tvSeries) {
-  if (tvSeries === undefined) {
-    sendMessage('no tv show specified');
-    return 'undefined (tvRemove)';
-  }
-  const index = tvShows.indexOf(tvSeries);
-  if (index !== -1) {
-    tvShows.splice(index, 1);
-    sendMessage(`successfully removed ${tvSeries}`);
-    return 'success (tvRemove)';
-  }
-  sendMessage(`${tvSeries} not found in array`);
-  return 'not in array (tvRemove)';
-};
-commands.tvGuide = function tvGuide(x) {
-  // x can pass in day of the week or all; if nothing then defaults to today
-  let date;
-  if (x === undefined) {
-    date = new Date();
-    date = formatDate(date);
-  }
-  tvmaze.schedule('US', date, (error, response) => {
-    const sched = JSON.parse(response);
-    sched.forEach(episode => {
-      if (tvShows.indexOf(episode.show.name) !== -1) {
-        const mes = `${episode.show.name} ${episode.season}x${episode.number} ${episode.name}`;
-        sendMessage(mes);
+    bot.on('ready', () => {
+      console.log('beebo lives!');
+    });
+    bot.on('message', msg => {
+      if (!msg.content.startsWith('!') || msg.author.bot) return;
+      const arg = msg.content.slice(1).split(' ');
+      let command = arg.shift();
+      if (command in this.commands) {
+        command = this.commands[command];
+        command.command.call(this, arg);
+        // .then(res => {
+        //   this.sendMessage(res);
+        // });
       }
     });
-  });
-};
-// toggle tts on commands
-// commands.tts = function tts(command) {
-//   const commandIndex = Object.keys(commands).indexOf(command);
-//   if (commandIndex !== -1) {
-//     ttsArray[commandIndex] = !ttsArray[commandIndex];
-//     return `tts for ${command} is ${ttsArray[commandIndex]}`;
-//   }
-//   return `unable to toggle tts for ${command}`;
-// };
-// help
-commands.help = function help() {
-  return Object.keys(commands);
-};
+
+    bot.on('voiceStateUpdate', (oldMember, newMember) => {
+      const oldUserChannel = oldMember.voiceChannel;
+      const newUserChannel = newMember.voiceChannel;
+      // check if user joined a channel
+      if (newUserChannel !== undefined && oldUserChannel === undefined) {
+        this.sendMessage(`${newMember.user.username} has joined your channel`);
+      }
+    });
+  }
+
+  async loadCommands() {
+    fs.readdir(`./commands`, (err, files) => {
+      if (err) return 'failed to load commands';
+      files.forEach(file => {
+        try {
+          const command = require(`./commands/${file}`);
+          this.commands[command.name] = Object.assign(
+            {
+              usage: '',
+              description: ''
+            },
+            command
+          );
+        } catch (err1) {
+          console.log(`failed to load command ${file}`);
+        }
+      });
+      return 0;
+    });
+  }
+
+  async init() {
+    const channels = Array.from(this.server.channels.keys());
+    for (let i = 0; i < channels.length; i += 1) {
+      if (this.server.channels.get(channels[i]).type === 'text') {
+        this.textChannel = this.server.channels.get(channels[i]);
+        return;
+      }
+    }
+  }
+
+  async sendMessage(message) {
+    this.textChannel.send(message);
+  }
+}
+
+module.exports = BetterBeebo;
