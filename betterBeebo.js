@@ -9,9 +9,8 @@ class BetterBeebo {
     const bot = new Discord.Client();
 
     this.server = bot.guilds.get(auth.testID);
-
     this.textChannel = '';
-    this.init();
+    let channels; // array of text and voice channels in server
 
     this.games = [];
     this.tvShows = [
@@ -31,6 +30,14 @@ class BetterBeebo {
 
     bot.on('ready', () => {
       console.log('beebo lives!');
+      this.server = bot.guilds.get(auth.testID);
+      channels = Array.from(this.server.channels.keys());
+      for (let i = 0; i < channels.length; i += 1) {
+        if (this.server.channels.get(channels[i]).type === 'text') {
+          this.textChannel = this.server.channels.get(channels[i]);
+          return;
+        }
+      }
     });
     bot.on('message', msg => {
       if (!msg.content.startsWith('!') || msg.author.bot) return;
@@ -38,10 +45,9 @@ class BetterBeebo {
       let command = arg.shift();
       if (command in this.commands) {
         command = this.commands[command];
-        command.command.call(this, arg);
-        // .then(res => {
-        //   this.sendMessage(res);
-        // });
+        command.command.call(this, arg).then(res => {
+          if (res !== undefined) this.sendMessage(res);
+        });
       }
     });
 
@@ -76,15 +82,7 @@ class BetterBeebo {
     });
   }
 
-  async init() {
-    const channels = Array.from(this.server.channels.keys());
-    for (let i = 0; i < channels.length; i += 1) {
-      if (this.server.channels.get(channels[i]).type === 'text') {
-        this.textChannel = this.server.channels.get(channels[i]);
-        return;
-      }
-    }
-  }
+  async init() {}
 
   async sendMessage(message) {
     this.textChannel.send(message);

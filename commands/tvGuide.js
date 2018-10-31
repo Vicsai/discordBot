@@ -5,7 +5,7 @@ async function tvGuideCommand(x) {
   let date;
   if (x === undefined) {
     date = new Date();
-    date = await formatDate(date);
+    date = formatDate(date);
   }
   tvmaze.schedule('US', date, (error, response) => {
     if (error) return 'error';
@@ -18,7 +18,7 @@ async function tvGuideCommand(x) {
     });
   });
 }
-async function formatDate(date) {
+function formatDate(date) {
   const month = `0${date.getMonth() + 1}`;
   const formattedDate = `${date.getFullYear()}-${month.substring(0, 2)}-${date.getDate()}`;
   return formattedDate;
