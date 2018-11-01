@@ -83,8 +83,6 @@ class BetterBeebo {
     });
   }
 
-  async init() {}
-
   async sendMessage(message) {
     this.textChannel.send(message);
   }
