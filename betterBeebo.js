@@ -8,7 +8,8 @@ class BetterBeebo {
   constructor() {
     const bot = new Discord.Client();
 
-    this.server = bot.guilds.get(auth.testID);
+    this.server = bot.guilds.get(auth.serverID);
+    console.log(this.server);
     this.textChannel = '';
     let channels; // array of text and voice channels in server
 
@@ -30,7 +31,7 @@ class BetterBeebo {
 
     bot.on('ready', () => {
       console.log('beebo lives!');
-      this.server = bot.guilds.get(auth.testID);
+      this.server = bot.guilds.get(auth.serverID);
       channels = Array.from(this.server.channels.keys());
       for (let i = 0; i < channels.length; i += 1) {
         if (this.server.channels.get(channels[i]).type === 'text') {
