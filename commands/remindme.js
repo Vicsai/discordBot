@@ -13,5 +13,6 @@ function remindme(user, msg) {
       }, waitTime);
     });
   }
+  return 'please provide a valid time';
 }
 module.exports = remindme;

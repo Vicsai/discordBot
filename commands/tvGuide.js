@@ -1,27 +1,65 @@
 const tvmaze = require('tvmaze-node');
 
-async function tvGuideCommand(x) {
-  // x can pass in day of the week or all; if nothing then defaults to today
-  let date;
-  if (x === undefined) {
-    date = new Date();
-    date = formatDate(date);
+const weekNames = {
+  sun: 0,
+  mon: 1,
+  tue: 2,
+  wed: 3,
+  thu: 4,
+  fri: 5,
+  sat: 6,
+  aliases: {
+    sunday: 'sun',
+    monday: 'mon',
+    tuesday: 'tue',
+    tues: 'tue',
+    tu: 'tue',
+    wednesday: 'wed',
+    thursday: 'thu',
+    th: 'thu',
+    thur: 'thu',
+    thurs: 'thu',
+    saturday: 'sat'
   }
+};
+
+function formatDate(date) {
+  const month = `0${date.getMonth() + 1}`.slice(-2);
+  const day = `0${date.getDate()}`.slice(-2);
+  const formattedDate = `${date.getFullYear()}-${month.substring(0, 2)}-${day}`;
+  return formattedDate;
+}
+
+async function tvGuideCommand(arg) {
+  // x can pass in day of the week or all; if nothing then defaults to today
+  let date = new Date();
+  if (arg === undefined || arg.length === 0) {
+    date = formatDate(date);
+  } else if (weekNames[arg] !== undefined || weekNames[weekNames.aliases[arg]] !== undefined) {
+    let givenDay = weekNames[arg];
+    if (givenDay === undefined) givenDay = weekNames[weekNames.aliases[arg]];
+    const today = date.getDay();
+    if (today > givenDay) {
+      // if day is in the same week
+      const dif = 7 - (today - givenDay);
+      date.setDate(date.getDate() + dif);
+    } else if (today < givenDay) {
+      // if day is next week
+      const dif = givenDay - today;
+      date.setDate(date.getDate() + dif);
+    }
+    date = formatDate(date);
+  } else return 'unable to identify date sent';
   tvmaze.schedule('US', date, (error, response) => {
     if (error) return 'error';
     const sched = JSON.parse(response);
     sched.forEach(episode => {
       if (this.tvShows.indexOf(episode.show.name) !== -1) {
         const mes = `${episode.show.name} ${episode.season}x${episode.number} ${episode.name}`;
-        this.sendMessage(mes);
+        this.sendMessage(mes, false);
       }
     });
   });
-}
-function formatDate(date) {
-  const month = `0${date.getMonth() + 1}`;
-  const formattedDate = `${date.getFullYear()}-${month.substring(0, 2)}-${date.getDate()}`;
-  return formattedDate;
 }
 module.exports = {
   command: tvGuideCommand,

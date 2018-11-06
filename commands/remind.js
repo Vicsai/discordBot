@@ -13,6 +13,7 @@ async function remindCommand(arg) {
     const msg = await remindSomeone(user, arg);
     return msg;
   }
+  return 'please provide a user after the command';
 }
 module.exports = {
   command: remindCommand,

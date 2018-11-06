@@ -13,5 +13,6 @@ async function remindSomeone(user, msg) {
       }, waitTime);
     });
   }
+  return 'please provide a valid time';
 }
 module.exports = remindSomeone;
