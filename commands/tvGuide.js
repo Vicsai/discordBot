@@ -1,3 +1,4 @@
+const tvmaze = require('tvmaze-node');
 const tvGuideSearch = require('./tvGuideSearch.js');
 
 const weekNames = {
@@ -48,8 +49,7 @@ async function tvGuideCommand(arg) {
     } else return 'unable to identify date sent';
   }
   date = formatDate(date);
-  const msg = await tvGuideSearch(date, this.tvShows);
-  console.log(msg);
+  const msg = tvGuideSearch(date, this.tvShows);
   return msg;
 }
 module.exports = {

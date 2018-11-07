@@ -8,7 +8,7 @@ class BetterBeebo {
   constructor() {
     const bot = new Discord.Client();
 
-    this.server = bot.guilds.get(auth.testID);
+    this.server = bot.guilds.get(auth.serverID);
     this.textChannel = '';
 
     this.games = [];
@@ -28,8 +28,8 @@ class BetterBeebo {
     bot.login(auth.token);
 
     bot.on('ready', () => {
-      console.log('beebo lives!');
-      this.server = bot.guilds.get(auth.testID);
+      console.log('Beebo lives!');
+      this.server = bot.guilds.get(auth.serverID);
       this.channels = Array.from(this.server.channels.keys());
       for (let i = 0; i < this.channels.length; i += 1) {
         if (this.server.channels.get(this.channels[i]).type === 'text') {
@@ -59,6 +59,11 @@ class BetterBeebo {
         this.sendMessage(`${newMember.user.username} has joined your channel`, true);
       }
     });
+    function graceful() {
+      bot.destroy().then(process.exit(0));
+    }
+    process.on('SIGTERM', graceful);
+    process.on('SIGINT', graceful);
   }
 
   async loadCommands() {
