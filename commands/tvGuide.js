@@ -1,4 +1,4 @@
-const tvmaze = require('tvmaze-node');
+const tvGuideSearch = require('./tvGuideSearch.js');
 
 const weekNames = {
   sun: 0,
@@ -33,9 +33,7 @@ function formatDate(date) {
 async function tvGuideCommand(arg) {
   // x can pass in day of the week or all; if nothing then defaults to today
   let date = new Date();
-  if (arg === undefined || arg.length === 0) {
-    date = formatDate(date);
-  } else if (weekNames[arg] !== undefined || weekNames[weekNames.aliases[arg]] !== undefined) {
+  if (weekNames[arg] !== undefined || weekNames[weekNames.aliases[arg]] !== undefined) {
     let givenDay = weekNames[arg];
     if (givenDay === undefined) givenDay = weekNames[weekNames.aliases[arg]];
     const today = date.getDay();
@@ -47,19 +45,12 @@ async function tvGuideCommand(arg) {
       // if day is next week
       const dif = givenDay - today;
       date.setDate(date.getDate() + dif);
-    }
-    date = formatDate(date);
-  } else return 'unable to identify date sent';
-  tvmaze.schedule('US', date, (error, response) => {
-    if (error) return 'error';
-    const sched = JSON.parse(response);
-    sched.forEach(episode => {
-      if (this.tvShows.indexOf(episode.show.name) !== -1) {
-        const mes = `${episode.show.name} ${episode.season}x${episode.number} ${episode.name}`;
-        this.sendMessage(mes, false);
-      }
-    });
-  });
+    } else return 'unable to identify date sent';
+  }
+  date = formatDate(date);
+  const msg = await tvGuideSearch(date, this.tvShows);
+  console.log(msg);
+  return msg;
 }
 module.exports = {
   command: tvGuideCommand,

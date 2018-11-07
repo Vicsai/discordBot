@@ -8,7 +8,7 @@ class BetterBeebo {
   constructor() {
     const bot = new Discord.Client();
 
-    this.server = bot.guilds.get(auth.serverID);
+    this.server = bot.guilds.get(auth.testID);
     this.textChannel = '';
 
     this.games = [];
