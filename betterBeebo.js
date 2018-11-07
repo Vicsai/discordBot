@@ -8,9 +8,8 @@ class BetterBeebo {
   constructor() {
     const bot = new Discord.Client();
 
-    this.server = bot.guilds.get(auth.testID);
+    this.server = bot.guilds.get(auth.serverID);
     this.textChannel = '';
-    let channels; // array of text and voice channels in server
 
     this.games = [];
     this.tvShows = [
@@ -31,10 +30,10 @@ class BetterBeebo {
     bot.on('ready', () => {
       console.log('beebo lives!');
       this.server = bot.guilds.get(auth.testID);
-      channels = Array.from(this.server.channels.keys());
-      for (let i = 0; i < channels.length; i += 1) {
-        if (this.server.channels.get(channels[i]).type === 'text') {
-          this.textChannel = this.server.channels.get(channels[i]);
+      this.channels = Array.from(this.server.channels.keys());
+      for (let i = 0; i < this.channels.length; i += 1) {
+        if (this.server.channels.get(this.channels[i]).type === 'text') {
+          this.textChannel = this.server.channels.get(this.channels[i]);
           return;
         }
       }
@@ -47,7 +46,7 @@ class BetterBeebo {
       if (command in this.commands) {
         command = this.commands[command];
         command.command.call(this, arg).then(res => {
-          if (res !== undefined) this.sendMessage(res);
+          if (res !== undefined) this.sendMessage(res, false);
         });
       }
     });
@@ -57,7 +56,7 @@ class BetterBeebo {
       const newUserChannel = newMember.voiceChannel;
       // check if user joined a channel
       if (newUserChannel !== undefined && oldUserChannel === undefined) {
-        this.sendMessage(`${newMember.user.username} has joined your channel`);
+        this.sendMessage(`${newMember.user.username} has joined your channel`, true);
       }
     });
   }
@@ -83,8 +82,8 @@ class BetterBeebo {
     });
   }
 
-  async sendMessage(message) {
-    this.textChannel.send(message);
+  async sendMessage(message, tts) {
+    this.textChannel.send(message, { tts });
   }
 }
 
