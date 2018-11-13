@@ -1,4 +1,3 @@
-const tvmaze = require('tvmaze-node');
 const tvGuideSearch = require('./tvGuideSearch.js');
 
 const weekNames = {
@@ -46,8 +45,8 @@ async function tvGuideCommand(arg) {
       // if day is next week
       const dif = givenDay - today;
       date.setDate(date.getDate() + dif);
-    } else return 'unable to identify date sent';
-  }
+    }
+  } else return 'unable to identify date sent';
   date = formatDate(date);
   const msg = tvGuideSearch(date, this.tvShows);
   return msg;

@@ -41,6 +41,8 @@ class BetterBeebo {
     bot.on('message', msg => {
       if (!msg.content.startsWith('!') || msg.author.bot) return;
       this.author = msg.author.id;
+      this.textChannel = msg.channel;
+      this.server = msg.guild;
       const arg = msg.content.slice(1).split(' ');
       let command = arg.shift();
       if (command in this.commands) {

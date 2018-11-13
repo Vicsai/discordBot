@@ -1,6 +1,6 @@
 const time = { sec: 1000, min: 60000, hr: 3600000 };
 
-async function remindSomeone(user, msg) {
+function remindSomeone(user, msg) {
   if (time[msg[1]] !== undefined) {
     const timeValue = time[msg[1]];
     const givenTime = parseInt(msg[0], 10);
