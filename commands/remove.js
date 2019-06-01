@@ -1,7 +1,6 @@
 async function removeCommand(arg) {
   if (arg[0] === undefined) return 'please specify if the title is a game or show';
   if (arg[0].toLowerCase() === 'game' && arg[1] !== undefined) {
-    arg.shift();
     const str = arg.join(' ');
     const index = this.games.indexOf(str);
     if (index !== -1) {
@@ -11,7 +10,6 @@ async function removeCommand(arg) {
     return `${str} was not in games`;
   }
   if (arg[0].toLowerCase() === 'show' && arg[1] !== undefined) {
-    arg.shift();
     const str = arg.join(' ');
     const index = this.tvShows.indexOf(str);
     if (index !== -1) {

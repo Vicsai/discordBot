@@ -8,7 +8,7 @@ class BetterBeebo {
   constructor() {
     const bot = new Discord.Client();
 
-    this.server = bot.guilds.get(auth.serverID);
+    this.server = '';
     this.textChannel = '';
 
     this.games = [];
@@ -21,15 +21,19 @@ class BetterBeebo {
       'Modern Family',
       'Titans'
     ];
+    this.exchangeRates = {
+      usd: 1.35,
+      jpy: 0.012,
+      cny: 0.2
+    };
     this.commands = {}; // object that contains the commands
     this.loadCommands();
-    this.ttsArray = []; // array of booleans that dictates the use of text-to-speech
 
     bot.login(auth.token);
 
     bot.on('ready', () => {
       console.log('Beebo lives!');
-      this.server = bot.guilds.get(auth.serverID);
+      this.server = bot.guilds.get(auth.testID);
       this.channels = Array.from(this.server.channels.keys());
       for (let i = 0; i < this.channels.length; i += 1) {
         if (this.server.channels.get(this.channels[i]).type === 'text') {

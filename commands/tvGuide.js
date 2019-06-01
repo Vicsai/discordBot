@@ -46,7 +46,7 @@ async function tvGuideCommand(arg) {
       const dif = givenDay - today;
       date.setDate(date.getDate() + dif);
     }
-  } else return 'unable to identify date sent';
+  }
   date = formatDate(date);
   const msg = tvGuideSearch(date, this.tvShows);
   return msg;
