@@ -1,6 +1,5 @@
 async function addCommand(arg) {
-  if (arg[0] === undefined || arg[1] === undefined)
-    return 'please specify if the title is a game or show';
+  if (arg[0] === undefined || arg[1] === undefined) return 'missing arg';
   const str = arg.join(' ');
   if (arg[0].toLowerCase() === 'game') {
     this.games.push(str);
@@ -10,7 +9,7 @@ async function addCommand(arg) {
     this.tvShows.push(str);
     return `successfully added ${str} to shows`;
   }
-  return 'please specify a title to add';
+  return `container doesn't exist`;
 }
 module.exports = {
   command: addCommand,
