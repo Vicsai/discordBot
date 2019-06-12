@@ -55,5 +55,6 @@ module.exports = {
   command: tvGuideCommand,
   name: 'tvGuide',
   usage: '!tvGuide <param>',
-  description: 'show information on tracked shows'
+  description: 'show information on tracked shows',
+  formatDate
 };

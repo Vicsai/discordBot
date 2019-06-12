@@ -5,27 +5,15 @@ const fs = require('fs');
 const auth = require('./auth.json');
 
 class BetterBeebo {
-  constructor() {
+  constructor(games, tvShows, exchangeRates) {
     const bot = new Discord.Client();
 
     this.server = '';
     this.textChannel = '';
 
-    this.games = [];
-    this.tvShows = [
-      'The Flash',
-      'Arrow',
-      "DC's Legends of Tomorrow",
-      'Black Lightning',
-      'Gotham',
-      'Modern Family',
-      'Titans'
-    ];
-    this.exchangeRates = {
-      usd: 1.35,
-      jpy: 0.012,
-      cny: 0.2
-    };
+    this.games = games;
+    this.tvShows = tvShows;
+    this.exchangeRates = exchangeRates;
     this.commands = {}; // object that contains the commands
     this.loadCommands();
 
@@ -51,7 +39,7 @@ class BetterBeebo {
       let command = arg.shift();
       if (command in this.commands) {
         command = this.commands[command];
-        command.command.call(this, arg).then(res => {
+        command.command.call(this, arg, false).then(res => {
           if (res !== undefined) this.sendMessage(res, false);
         });
       }
