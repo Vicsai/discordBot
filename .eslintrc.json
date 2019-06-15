@@ -3,6 +3,15 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": ["error"],
-    "linebreak-style": ["error", "windows"]
+    "linebreak-style": ["error", "windows"],
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "should|expect"
+      }
+    ]
+  },
+  "env": {
+    "mocha": true
   }
 }
