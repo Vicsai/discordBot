@@ -1,11 +1,10 @@
-const remindMe = require('./remindme.js');
 const remindSomeone = require('./remindSomeone.js');
 
 async function remindCommand(arg) {
   if (arg[0] !== undefined && arg[0].toLowerCase() === 'me') {
     arg.shift();
     const user = this.author;
-    const msg = await remindMe(user, arg);
+    const msg = await remindSomeone(user, arg);
     return msg;
   }
   if (arg[0] !== undefined && arg[0].startsWith('<@') && arg[0].endsWith('>')) {
@@ -13,7 +12,7 @@ async function remindCommand(arg) {
     const msg = await remindSomeone(user, arg);
     return msg;
   }
-  return 'please provide a user after the command';
+  return 'please provide a valid user after the command';
 }
 module.exports = {
   command: remindCommand,

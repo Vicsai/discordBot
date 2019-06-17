@@ -1,7 +1,7 @@
 const time = { sec: 1000, min: 60000, hr: 3600000 };
 
-async function remindSomeone(user, msg) {
-  if (time[msg[1]] !== undefined) {
+function remindSomeone(user, msg) {
+  if (!Number.isNaN(parseInt(msg[0], 10)) && time[msg[1]] !== undefined) {
     const timeValue = time[msg[1]];
     const givenTime = parseInt(msg[0], 10);
     msg.splice(0, 2);

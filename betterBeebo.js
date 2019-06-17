@@ -5,30 +5,21 @@ const fs = require('fs');
 const auth = require('./auth.json');
 
 class BetterBeebo {
-  constructor() {
+  constructor(games, tvShows) {
     const bot = new Discord.Client();
 
-    this.server = bot.guilds.get(auth.serverID);
+    this.server = '';
     this.textChannel = '';
 
-    this.games = [];
-    this.tvShows = [
-      'The Flash',
-      'Arrow',
-      "DC's Legends of Tomorrow",
-      'Black Lightning',
-      'Gotham',
-      'Modern Family',
-      'Titans'
-    ];
+    this.games = games;
+    this.tvShows = tvShows;
     this.commands = {}; // object that contains the commands
     this.loadCommands();
-    this.ttsArray = []; // array of booleans that dictates the use of text-to-speech
 
     bot.login(auth.token);
 
     bot.on('ready', () => {
-      console.log('beebo lives!');
+      console.log('Beebo lives!');
       this.server = bot.guilds.get(auth.testID);
       this.channels = Array.from(this.server.channels.keys());
       for (let i = 0; i < this.channels.length; i += 1) {
@@ -41,11 +32,13 @@ class BetterBeebo {
     bot.on('message', msg => {
       if (!msg.content.startsWith('!') || msg.author.bot) return;
       this.author = msg.author.id;
+      this.textChannel = msg.channel;
+      this.server = msg.guild;
       const arg = msg.content.slice(1).split(' ');
       let command = arg.shift();
       if (command in this.commands) {
         command = this.commands[command];
-        command.command.call(this, arg).then(res => {
+        command.command.call(this, arg, false).then(res => {
           if (res !== undefined) this.sendMessage(res, false);
         });
       }
@@ -59,6 +52,11 @@ class BetterBeebo {
         this.sendMessage(`${newMember.user.username} has joined your channel`, true);
       }
     });
+    function graceful() {
+      bot.destroy().then(process.exit(0));
+    }
+    process.on('SIGTERM', graceful);
+    process.on('SIGINT', graceful);
   }
 
   async loadCommands() {
