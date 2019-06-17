@@ -2,7 +2,7 @@
   "name": "discordbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "start.js",
   "dependencies": {
     "discord.js": "^11.5.1",
     "expect.js": "^0.3.1",
