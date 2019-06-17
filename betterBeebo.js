@@ -5,7 +5,7 @@ const fs = require('fs');
 const auth = require('./auth.json');
 
 class BetterBeebo {
-  constructor(games, tvShows, exchangeRates) {
+  constructor(games, tvShows) {
     const bot = new Discord.Client();
 
     this.server = '';
@@ -13,7 +13,6 @@ class BetterBeebo {
 
     this.games = games;
     this.tvShows = tvShows;
-    this.exchangeRates = exchangeRates;
     this.commands = {}; // object that contains the commands
     this.loadCommands();
 
