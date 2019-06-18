@@ -1,4 +1,4 @@
-# discord bot
+# discord bot [![Build Status](https://travis-ci.com/Vicsai/discordBot.svg?branch=master)](https://travis-ci.com/Vicsai/discordBot)
 
 A discord bot that helps in small tasks such as checking what shows air or convert currencies
 
