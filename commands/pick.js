@@ -2,10 +2,10 @@
  * randomly pick a title from the games array
  * @return {string} a game title
  */
-async function pickCommand() {
-  if (this.games.length === 0) return 'no games in array';
+async function pickCommand(games) {
+  if (games.length === 0) return 'no games in array';
   const rand = Math.floor(Math.random() * this.games.length);
-  return this.games[rand];
+  return games[rand];
 }
 module.exports = {
   command: pickCommand,
