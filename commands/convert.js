@@ -1,5 +1,10 @@
 const getExchangeRate = require('./getExchangeRate.js');
 
+/**
+ * converts a given currency in to CAD
+ * @param {string[]} arg - rest of the message after the users calls the command
+ * @return {string} message to be sent
+ */
 async function convertCommand(arg) {
   const value = arg[0];
   let currency = arg[1];

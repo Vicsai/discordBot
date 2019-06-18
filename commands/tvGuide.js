@@ -1,5 +1,6 @@
 const tvGuideSearch = require('./tvGuideSearch.js');
 
+// maps common week usages to 0-6
 const weekNames = {
   sun: 0,
   mon: 1,
@@ -23,6 +24,10 @@ const weekNames = {
   }
 };
 
+/**
+ * formats a given date to YYYY-MM-DD
+ * @param {Object} date
+ */
 function formatDate(date) {
   const month = `0${date.getMonth() + 1}`.slice(-2);
   const day = `0${date.getDate()}`.slice(-2);
@@ -30,6 +35,10 @@ function formatDate(date) {
   return formattedDate;
 }
 
+/**
+ * search for shows in tvShows that are airing on the given date and return more information on them
+ * @param {string[]} arg -rest of the message after the users calls the command
+ */
 async function tvGuideCommand(arg) {
   // x can pass in day of the week or all; if nothing then defaults to today
   let date = new Date();

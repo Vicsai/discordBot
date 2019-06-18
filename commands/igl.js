@@ -1,3 +1,6 @@
+/**
+ * randomly picks a user that is currently in a voice channel
+ */
 async function iglCommand() {
   for (let i = 0; i < this.channels.length; i += 1) {
     const currentChannel = this.server.channels.get(this.channels[i]);

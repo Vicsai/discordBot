@@ -38,7 +38,7 @@ class BetterBeebo {
       let command = arg.shift();
       if (command in this.commands) {
         command = this.commands[command];
-        command.command.call(this, arg, false).then(res => {
+        command.command.call(this, arg, this.games, this.tvShows).then(res => {
           if (res !== undefined) this.sendMessage(res, false);
         });
       }
