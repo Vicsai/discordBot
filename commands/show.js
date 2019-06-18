@@ -1,3 +1,7 @@
+/**
+ * show all entries in either games or tvShows
+ * @param {string[]} arg -rest of the message after the users calls the command
+ */
 async function showCommand(arg) {
   if (arg[0] === undefined) return 'please specify what to show';
   if (arg[0].toLowerCase() === 'game' && this.games.length !== 0) {

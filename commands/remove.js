@@ -1,3 +1,8 @@
+/**
+ * remove a title from either from games or tvShows
+ * @param {string[]} arg -rest of the message after the users calls the command
+ * @return {string}
+ */
 async function removeCommand(arg) {
   if (arg[0] === undefined) return 'please specify if the title is a game or show';
   const container = arg.shift();
