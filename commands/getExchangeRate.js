@@ -11,10 +11,12 @@ function getExchangeRate(currency) {
       });
       response.on('end', () => {
         const obj = JSON.parse(data);
-        const lastElement = Object.keys(obj.observations).length - 1;
-        const date = obj.observations.d;
-        const rate = obj.observations[lastElement][code].v;
-        resolve(rate);
+        if (obj.hasOwnProperty('message')) resolve('invalid link');
+        else {
+          const lastElement = Object.keys(obj.observations).length - 1;
+          const rate = obj.observations[lastElement][code].v;
+          resolve(rate);
+        }
       });
     });
     req.on('error', error => {

@@ -8,10 +8,9 @@ async function convertCommand(arg) {
   if (Number.isNaN(parseFloat(arg[0], 10))) return 'number was not given';
 
   if (currency === undefined) currency = 'usd';
-  currency = currency.toLowerCase();
-  if (currency.length !== 3 || currency === 'cad') return 'invalid currency given';
   currency = currency.toUpperCase();
   const exchangeRate = await getExchangeRate(currency);
+  if (Number.isNaN(parseFloat(exchangeRate), 10)) return 'invalid currency given';
   const exchangeValue = parseFloat(value * exchangeRate).toFixed(2);
   return `${value} ${currency} is about ~$${exchangeValue} CAD`;
 }
