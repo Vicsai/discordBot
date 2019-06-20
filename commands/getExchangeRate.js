@@ -16,7 +16,7 @@ function getExchangeRate(currency) {
       });
       response.on('end', () => {
         const obj = JSON.parse(data);
-        if (obj.hasOwnProperty('message')) resolve('invalid link');
+        if (Object.prototype.hasOwnProperty.call(obj, 'message')) resolve('invalid link');
         else {
           const lastElement = Object.keys(obj.observations).length - 1;
           const rate = obj.observations[lastElement][code].v;

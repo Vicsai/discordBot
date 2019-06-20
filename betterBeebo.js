@@ -1,6 +1,7 @@
 // libraries
 const Discord = require('discord.js');
 const fs = require('fs');
+const schedule = require('node-schedule');
 
 const auth = require('./auth.json');
 
@@ -28,6 +29,11 @@ class BetterBeebo {
           return;
         }
       }
+      schedule.scheduleJob('18 * * *', () => {
+        this.commands.tvGuide.command([], this.tvShows).then(res => {
+          if (res !== undefined) this.sendMessage(res);
+        });
+      });
     });
     bot.on('message', msg => {
       if (!msg.content.startsWith('!') || msg.author.bot) return;
@@ -44,14 +50,14 @@ class BetterBeebo {
       }
     });
 
-    bot.on('voiceStateUpdate', (oldMember, newMember) => {
-      const oldUserChannel = oldMember.voiceChannel;
-      const newUserChannel = newMember.voiceChannel;
-      // check if user joined a channel
-      if (newUserChannel !== undefined && oldUserChannel === undefined) {
-        this.sendMessage(`${newMember.user.username} has joined your channel`, true);
-      }
-    });
+    // bot.on('voiceStateUpdate', (oldMember, newMember) => {
+    //   const oldUserChannel = oldMember.voiceChannel;
+    //   const newUserChannel = newMember.voiceChannel;
+    //   // check if user joined a channel
+    //   if (newUserChannel !== undefined && oldUserChannel === undefined) {
+    //     this.sendMessage(`${newMember.user.username} has joined your channel`, true);
+    //   }
+    // });
     function graceful() {
       bot.destroy().then(process.exit(0));
     }
@@ -65,6 +71,7 @@ class BetterBeebo {
       files.forEach(file => {
         try {
           const command = require(`./commands/${file}`);
+          if (command.usage === undefined) return;
           this.commands[command.name] = Object.assign(
             {
               usage: '',

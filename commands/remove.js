@@ -1,13 +1,15 @@
 /**
  * remove a title from either from games or tvShows
  * @param {string[]} arg -rest of the message after the users calls the command
+ * @param {string[]} games -list of games
+ * @param {string[]} tvShows -list of tvShows
  * @return {string}
  */
 async function removeCommand(arg, games, tvShows) {
-  if (arg[0] === undefined) return 'please specify if the title is a game or show';
-  const container = arg.shift();
-  if (container.toLowerCase() === 'game' && arg[0] !== undefined) {
-    const str = arg.join(' ');
+  if (arg.length < 2) return 'missing arg';
+  const container = arg.shift().toLowerCase();
+  const str = arg.join(' ');
+  if (container === 'game') {
     const index = games.indexOf(str);
     if (index !== -1) {
       games.splice(index, 1);
@@ -15,8 +17,7 @@ async function removeCommand(arg, games, tvShows) {
     }
     return `${str} was not in games`;
   }
-  if (container.toLowerCase() === 'show' && arg[0] !== undefined) {
-    const str = arg.join(' ');
+  if (container === 'show') {
     const index = tvShows.indexOf(str);
     if (index !== -1) {
       tvShows.splice(index, 1);
@@ -24,7 +25,7 @@ async function removeCommand(arg, games, tvShows) {
     }
     return `${str} was not in shows`;
   }
-  return 'please specify a title to remove';
+  return `container doesn't exist`;
 }
 module.exports = {
   command: removeCommand,

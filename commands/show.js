@@ -1,6 +1,8 @@
 /**
  * show all entries in either games or tvShows
  * @param {string[]} arg -rest of the message after the users calls the command
+ * @param {string[]} games -list of games
+ * @param {string[]} tvShows -list of tvShows
  */
 async function showCommand(arg, games, tvShows) {
   if (arg[0] === undefined) return 'please specify what to show';
