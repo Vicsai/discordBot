@@ -8,7 +8,7 @@ describe('tvGuide returns shows airing on the given date', () => {
     expect(returnMsg).to.equal('2019-01-12');
   });
   it('return no shows found', async () => {
-    const returnMsg = await tvGuide([], []);
+    const returnMsg = await tvGuide.command([], []);
     expect(returnMsg).to.equal('no shows airing');
   });
   it('return found show', async () => {
