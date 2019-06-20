@@ -38,8 +38,9 @@ function formatDate(date) {
 /**
  * search for shows in tvShows that are airing on the given date and return more information on them
  * @param {string[]} arg -rest of the message after the users calls the command
+ * @param {string[]} tvShows -list of tvShows
  */
-async function tvGuideCommand(arg) {
+async function tvGuideCommand(arg, tvShows) {
   // x can pass in day of the week or all; if nothing then defaults to today
   let date = new Date();
   if (weekNames[arg] !== undefined || weekNames[weekNames.aliases[arg]] !== undefined) {
@@ -57,13 +58,13 @@ async function tvGuideCommand(arg) {
     }
   }
   date = formatDate(date);
-  const msg = tvGuideSearch(date, this.tvShows);
+  const msg = tvGuideSearch(date, tvShows);
   return msg;
 }
 module.exports = {
   command: tvGuideCommand,
   name: 'tvGuide',
-  usage: '!tvGuide <param>',
+  usage: '!tvGuide',
   description: 'show information on tracked shows',
   formatDate
 };

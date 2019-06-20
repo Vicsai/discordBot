@@ -13,10 +13,8 @@ function tvGuideSearch(date, tvShows) {
           mes.push(`${episode.show.name} ${episode.season}x${episode.number} ${episode.name}`);
         }
       });
-      if (mes.length >= 1) {
-        resolve(mes.join('\n'));
-      }
-      resolve(`no shows airing on ${date}`);
+      if (mes.length >= 1) resolve(mes.join('\n'));
+      resolve(`no shows airing`);
     });
   });
 }
