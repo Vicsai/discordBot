@@ -64,7 +64,7 @@ async function tvGuideCommand(arg, d, tvShows) {
 module.exports = {
   command: tvGuideCommand,
   name: 'tvGuide',
-  usage: '!tvGuide',
-  description: 'show information on tracked shows',
+  usage: '!tvGuide <day of the week>',
+  description: 'show information on tracked shows; defaults to today if no param is given',
   formatDate
 };

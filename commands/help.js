@@ -1,8 +1,8 @@
 async function helpCommand() {
-  const str = ['```diff\n'];
+  const str = ['```md\n'];
   Object.keys(this.commands).forEach(key => {
-    str.push(`-${this.commands[key].usage}\n`);
-    str.push(`+   ${this.commands[key].description}\n`);
+    str.push(`#${this.commands[key].usage}\n`);
+    str.push(`<  ${this.commands[key].description}>\n`);
   });
   if (str.length >= 1) {
     str.push('```');
@@ -16,3 +16,9 @@ module.exports = {
   usage: '!help',
   description: 'shows all commands'
 };
+// ['```diff\n']
+
+// Object.keys(this.commands).forEach(key => {
+//   str.push(`-${this.commands[key].usage}\n`);
+//   str.push(`+   ${this.commands[key].description}\n`);
+// });
