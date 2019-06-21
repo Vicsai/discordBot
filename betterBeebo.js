@@ -20,18 +20,18 @@ class BetterBeebo {
     bot.login(auth.token);
 
     bot.on('ready', () => {
-      console.log('Beebo lives!');
+      // initialize server id and text channel id
       this.server = bot.guilds.get(auth.testID);
       this.channels = Array.from(this.server.channels.keys());
       for (let i = 0; i < this.channels.length; i += 1) {
         if (this.server.channels.get(this.channels[i]).type === 'text') {
           this.textChannel = this.server.channels.get(this.channels[i]);
-          return;
+          break;
         }
       }
       schedule.scheduleJob('18 * * *', () => {
         this.commands.tvGuide.command([], this.tvShows).then(res => {
-          if (res !== undefined) this.sendMessage(res);
+          this.sendMessage(res);
         });
       });
     });

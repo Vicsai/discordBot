@@ -40,7 +40,7 @@ function formatDate(date) {
  * @param {string[]} arg -rest of the message after the users calls the command
  * @param {string[]} tvShows -list of tvShows
  */
-async function tvGuideCommand(arg, tvShows) {
+async function tvGuideCommand(arg, d, tvShows) {
   // x can pass in day of the week or all; if nothing then defaults to today
   let date = new Date();
   if (weekNames[arg] !== undefined || weekNames[weekNames.aliases[arg]] !== undefined) {
