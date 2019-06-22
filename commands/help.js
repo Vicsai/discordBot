@@ -1,9 +1,13 @@
 async function helpCommand() {
-  const str = [];
+  const str = ['```md\n'];
   Object.keys(this.commands).forEach(key => {
-    str.push(`${this.commands[key].usage}`);
+    str.push(`#${this.commands[key].usage}\n`);
+    str.push(`<  ${this.commands[key].description}>\n`);
   });
-  if (str.length >= 1) return str.join('\n');
+  if (str.length >= 1) {
+    str.push('```');
+    return str.join('');
+  }
   return 'failed';
 }
 module.exports = {
@@ -12,3 +16,9 @@ module.exports = {
   usage: '!help',
   description: 'shows all commands'
 };
+// ['```diff\n']
+
+// Object.keys(this.commands).forEach(key => {
+//   str.push(`-${this.commands[key].usage}\n`);
+//   str.push(`+   ${this.commands[key].description}\n`);
+// });
