@@ -29,7 +29,7 @@ class BetterBeebo {
           break;
         }
       }
-      schedule.scheduleJob('18 * * *', () => {
+      schedule.scheduleJob('1 * * *', () => {
         this.commands.tvGuide.command([], this.tvShows).then(res => {
           this.sendMessage(res);
         });
