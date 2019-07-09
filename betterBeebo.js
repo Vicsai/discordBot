@@ -9,12 +9,14 @@ class BetterBeebo {
   constructor(games, tvShows) {
     const bot = new Discord.Client();
 
+    // initialize server data
     this.server = '';
     this.textChannel = '';
 
+    // initialize arrays and load commands
     this.games = games;
     this.tvShows = tvShows;
-    this.commands = {}; // object that contains the commands
+    this.commands = {};
     this.loadCommands();
 
     bot.login(auth.token);
@@ -29,12 +31,13 @@ class BetterBeebo {
           break;
         }
       }
-      schedule.scheduleJob('1 * * *', () => {
-        this.commands.tvGuide.command([], this.tvShows).then(res => {
+      schedule.scheduleJob('0 1 * * *', () => {
+        this.commands.tvGuide.command([], [], this.tvShows).then(res => {
           this.sendMessage(res);
         });
       });
     });
+
     bot.on('message', msg => {
       if (!msg.content.startsWith('!') || msg.author.bot) return;
       this.author = msg.author.id;

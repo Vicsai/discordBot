@@ -26,7 +26,7 @@ const weekNames = {
 
 /**
  * formats a given date to YYYY-MM-DD
- * @param {Object} date
+ * @param {Date} date
  */
 function formatDate(date) {
   const month = `0${date.getMonth() + 1}`.slice(-2);

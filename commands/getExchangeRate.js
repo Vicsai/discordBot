@@ -17,11 +17,9 @@ function getExchangeRate(currency) {
       response.on('end', () => {
         const obj = JSON.parse(data);
         if (Object.prototype.hasOwnProperty.call(obj, 'message')) resolve('invalid link');
-        else {
-          const lastElement = Object.keys(obj.observations).length - 1;
-          const rate = obj.observations[lastElement][code].v;
-          resolve(rate);
-        }
+        const lastElement = Object.keys(obj.observations).length - 1;
+        const rate = obj.observations[lastElement][code].v;
+        resolve(rate);
       });
     });
     req.on('error', error => {
