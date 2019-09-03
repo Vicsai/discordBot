@@ -10,8 +10,8 @@ function getLocationID(location) {
       });
       response.on('end', () => {
         const obj = JSON.parse(data);
-        if (Object.keys(obj).length === 0) resolve('cannot find city');
         if (Object.keys(obj).length > 1) resolve('please use full name of the city');
+        if (Object.entries(obj).length === 0) resolve('cannot find city');
         const id = obj[0].woeid;
         resolve(id);
       });
