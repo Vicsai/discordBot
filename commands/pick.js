@@ -2,7 +2,7 @@
  * randomly pick a title from the games array
  * @return {string} a game title
  */
-async function pickCommand(games) {
+async function pickCommand(ignore, games) {
   if (games.length === 0) return 'no games in array';
   const rand = Math.floor(Math.random() * games.length);
   return games[rand];

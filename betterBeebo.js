@@ -37,6 +37,11 @@ class BetterBeebo {
           this.sendMessage(res);
         });
       });
+      schedule.scheduleJob('0 1 * * *', () => {
+        this.commands.weather.command('vancouver').then(res => {
+          this.sendMessage(res);
+        });
+      });
     });
 
     bot.on('message', msg => {
