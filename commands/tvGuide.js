@@ -26,7 +26,7 @@ const weekNames = {
 
 /**
  * formats a given date to YYYY-MM-DD
- * @param {Object} date
+ * @param {Date} date
  */
 function formatDate(date) {
   const month = `0${date.getMonth() + 1}`.slice(-2);
@@ -40,7 +40,7 @@ function formatDate(date) {
  * @param {string[]} arg -rest of the message after the users calls the command
  * @param {string[]} tvShows -list of tvShows
  */
-async function tvGuideCommand(arg, d, tvShows) {
+async function tvGuideCommand(arg, ignore, tvShows) {
   // x can pass in day of the week or all; if nothing then defaults to today
   let date = new Date();
   if (weekNames[arg] !== undefined || weekNames[weekNames.aliases[arg]] !== undefined) {

@@ -6,15 +6,18 @@ const schedule = require('node-schedule');
 const auth = require('./auth.json');
 
 class BetterBeebo {
-  constructor(games, tvShows) {
+  constructor() {
     const bot = new Discord.Client();
 
+    // initialize server data
     this.server = '';
     this.textChannel = '';
 
-    this.games = games;
-    this.tvShows = tvShows;
-    this.commands = {}; // object that contains the commands
+    // initialize arrays and load commands
+    this.games = [];
+    this.tvShows = [];
+    this.loadData();
+    this.commands = {};
     this.loadCommands();
 
     bot.login(auth.token);
@@ -29,12 +32,18 @@ class BetterBeebo {
           break;
         }
       }
-      schedule.scheduleJob('1 * * *', () => {
-        this.commands.tvGuide.command([], this.tvShows).then(res => {
+      schedule.scheduleJob('0 1 * * *', () => {
+        this.commands.tvGuide.command([], [], this.tvShows).then(res => {
+          this.sendMessage(res);
+        });
+      });
+      schedule.scheduleJob('0 1 * * *', () => {
+        this.commands.weather.command('vancouver').then(res => {
           this.sendMessage(res);
         });
       });
     });
+
     bot.on('message', msg => {
       if (!msg.content.startsWith('!') || msg.author.bot) return;
       this.author = msg.author.id;
@@ -58,11 +67,39 @@ class BetterBeebo {
     //     this.sendMessage(`${newMember.user.username} has joined your channel`, true);
     //   }
     // });
-    function graceful() {
-      bot.destroy().then(process.exit(0));
+    // function graceful() {
+    //   bot.destroy().then(process.exit(0));
+    // }
+    process.on('SIGTERM', () => this.saveData().then(bot.destroy().then(process.exit(0))));
+    process.on('SIGINT', () => this.saveData().then(bot.destroy().then(process.exit(0))));
+  }
+
+  async saveData() {
+    const path = './data.txt';
+    if (fs.existsSync(path)) {
+      fs.unlink(path, err => {
+        if (err) throw err;
+      });
     }
-    process.on('SIGTERM', graceful);
-    process.on('SIGINT', graceful);
+    fs.writeFileSync(path, `${this.games}\n${this.tvShows}`);
+  }
+
+  async loadData() {
+    const path = './data.txt';
+    if (fs.existsSync(path)) {
+      fs.readFile(path, (err, data) => {
+        if (err) throw err;
+        const dataList = data.toString().split('\n');
+        const gameList = dataList[0].split(',');
+        const showList = dataList[1].split(',');
+        gameList.forEach(game => {
+          this.games.push(game);
+        });
+        showList.forEach(show => {
+          this.tvShows.push(show);
+        });
+      });
+    }
   }
 
   async loadCommands() {

@@ -4,6 +4,7 @@
   "rules": {
     "prettier/prettier": ["error"],
     "linebreak-style": ["error", "windows"],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-unused-vars": [
       "error",
       {

@@ -16,9 +16,3 @@ module.exports = {
   usage: '!help',
   description: 'shows all commands'
 };
-// ['```diff\n']
-
-// Object.keys(this.commands).forEach(key => {
-//   str.push(`-${this.commands[key].usage}\n`);
-//   str.push(`+   ${this.commands[key].description}\n`);
-// });
