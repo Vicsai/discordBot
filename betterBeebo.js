@@ -38,7 +38,7 @@ class BetterBeebo {
         });
       });
       schedule.scheduleJob('0 1 * * *', () => {
-        this.commands.weather.command('vancouver').then(res => {
+        this.commands.weather.command(['vancouver']).then(res => {
           this.sendMessage(res);
         });
       });
@@ -67,9 +67,6 @@ class BetterBeebo {
     //     this.sendMessage(`${newMember.user.username} has joined your channel`, true);
     //   }
     // });
-    // function graceful() {
-    //   bot.destroy().then(process.exit(0));
-    // }
     process.on('SIGTERM', () => this.saveData().then(bot.destroy().then(process.exit(0))));
     process.on('SIGINT', () => this.saveData().then(bot.destroy().then(process.exit(0))));
   }
@@ -92,12 +89,15 @@ class BetterBeebo {
         const dataList = data.toString().split('\n');
         const gameList = dataList[0].split(',');
         const showList = dataList[1].split(',');
-        gameList.forEach(game => {
-          this.games.push(game);
-        });
-        showList.forEach(show => {
-          this.tvShows.push(show);
-        });
+        if (gameList !== undefined || gameList.length !== 0) {
+          gameList.forEach(game => {
+            this.games.push(game);
+          });
+        }
+        if (showList !== undefined || showList.length !== 0)
+          showList.forEach(show => {
+            this.tvShows.push(show);
+          });
       });
     }
   }
