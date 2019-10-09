@@ -3,11 +3,11 @@ const remove = require('../commands/remove.js');
 
 describe('remove title', () => {
   it('no arg', async () => {
-    const returnMsg = await remove.command([]);
+    const returnMsg = await remove.command([], [], []);
     expect(returnMsg).to.equal('missing arg');
   });
   it('unknown container', async () => {
-    const returnMsg = await remove.command(['foo', 'bar']);
+    const returnMsg = await remove.command(['foo', 'bar'], [], []);
     expect(returnMsg).to.equal(`container doesn't exist`);
   });
   it('title not in shows', async () => {
